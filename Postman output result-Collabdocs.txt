@@ -1,0 +1,209 @@
+POSTMAN OUTPUT RESULTS
+======================
+
+Workspace Creation
+------------------
+POST http://127.0.0.1:8000/api/workspaces/
+{
+    "id": "2b70f707-5255-48f4-9b01-c697b67e8104",
+    "name": "Engineering Workspace",
+    "owner": "72eb7b26-235c-4ecd-bd7f-787a436ba8ed",
+    "owner_username": "raj",
+    "is_active": true,
+    "created_at": "2026-05-10T17:39:44.745711+05:30",
+    "member_count": 1
+}
+
+Add Workspace Member
+--------------------
+POST http://127.0.0.1:8000/api/workspaces/2b70f707-5255-48f4-9b01-c697b67e8104/members/
+{
+    "id": "22b39b6c-c855-4ba4-ae01-98ec06e82070",
+    "workspace": "2b70f707-5255-48f4-9b01-c697b67e8104",
+    "workspace_name": "Engineering Workspace",
+    "user": "04b1bb2a-5946-49ba-b0a2-489df23052cd",
+    "username": "kumar",
+    "role": "editor",
+    "joined_at": "2026-05-10T17:49:16.534909+05:30"
+}
+
+List Workspace Members
+----------------------
+GET http://127.0.0.1:8000/api/workspaces/2b70f707-5255-48f4-9b01-c697b67e8104/members/
+[
+    {
+        "id": "a7377376-2571-493d-84bf-78e6263ac3a6",
+        "workspace": "2b70f707-5255-48f4-9b01-c697b67e8104",
+        "workspace_name": "Engineering Workspace",
+        "user": "72eb7b26-235c-4ecd-bd7f-787a436ba8ed",
+        "username": "raj",
+        "role": "admin",
+        "joined_at": "2026-05-10T17:39:44.750062+05:30"
+    },
+    {
+        "id": "22b39b6c-c855-4ba4-ae01-98ec06e82070",
+        "workspace": "2b70f707-5255-48f4-9b01-c697b67e8104",
+        "workspace_name": "Engineering Workspace",
+        "user": "04b1bb2a-5946-49ba-b0a2-489df23052cd",
+        "username": "kumar",
+        "role": "editor",
+        "joined_at": "2026-05-10T17:49:16.534909+05:30"
+    }
+]
+
+Create Tags
+-----------
+POST http://127.0.0.1:8000/api/tags/
+{ "id": "59452388-ca95-4010-a40c-ada02f85599f", "name": "python" }
+
+POST http://127.0.0.1:8000/api/tags/
+{ "id": "e3947567-7c14-4479-885d-da70f3dc72a2", "name": "django" }
+
+Create Document
+---------------
+POST http://127.0.0.1:8000/api/documents/
+{
+    "workspace": "2b70f707-5255-48f4-9b01-c697b67e8104",
+    "title": "Project Notes",
+    "content": "Initial content for CollabDocs project.",
+    "status": "draft",
+    "created_by": "72eb7b26-235c-4ecd-bd7f-787a436ba8ed"
+}
+
+Response:
+{
+    "id": "cc96c94a-6ea0-4e20-b225-df0932b9ac92",
+    "workspace": "2b70f707-5255-48f4-9b01-c697b67e8104",
+    "title": "Project Notes",
+    "content": "Initial content for CollabDocs project.",
+    "status": "draft",
+    "created_by_username": "raj",
+    "created_at": "2026-05-10T18:05:06.083906+05:30",
+    "updated_at": "2026-05-10T18:05:06.083932+05:30",
+    "tag_names": []
+}
+
+Update Document
+---------------
+PUT http://127.0.0.1:8000/api/documents/cc96c94a-6ea0-4e20-b225-df0932b9ac92/
+{
+    "title": "Project Notes Updated",
+    "content": "Updated content with more details.",
+    "status": "published"
+}
+
+Document Versions
+-----------------
+GET http://127.0.0.1:8000/api/documents/cc96c94a-6ea0-4e20-b225-df0932b9ac92/versions/
+[
+  {
+    "version_number": 1,
+    "content": "Initial content for CollabDocs project.",
+    "saved_by_username": "raj"
+  },
+  {
+    "version_number": 2,
+    "content": "Updated content with more details.",
+    "saved_by_username": "raj"
+  }
+]
+
+Document Stats
+--------------
+GET http://127.0.0.1:8000/api/documents/cc96c94a-6ea0-4e20-b225-df0932b9ac92/stats/
+{
+    "version_count": 2,
+    "comment_count": 0,
+    "contributor_count": 1
+}
+
+Add Tags to Document
+--------------------
+POST http://127.0.0.1:8000/api/documents/cc96c94a-6ea0-4e20-b225-df0932b9ac92/tags/
+{
+    "tag_ids": ["59452388-ca95-4010-a40c-ada02f85599f", "e3947567-7c14-4479-885d-da70f3dc72a2"]
+}
+
+Response:
+{ "detail": "Tags added successfully." }
+
+Filter Documents
+----------------
+GET /api/documents/?workspace=2b70f707-5255-48f4-9b01-c697b67e8104
+GET /api/documents/?status=published
+GET /api/documents/?tag=python
+GET /api/documents/?search=project
+
+Comments
+--------
+POST /api/comments/
+{ "document": "cc96c94a-6ea0-4e20-b225-df0932b9ac92", "author": "04b1bb2a-5946-49ba-b0a2-489df23052cd", "content": "This is a top-level comment." }
+
+Response:
+{
+    "id": "c84ac8ba-31b2-4595-8c73-eb0e4426f92a",
+    "author_username": "kumar",
+    "content": "This is a top-level comment.",
+    "reply_count": 0
+}
+
+POST /api/comments/
+{ "document": "cc96c94a-6ea0-4e20-b225-df0932b9ac92", "author": "72eb7b26-235c-4ecd-bd7f-787a436ba8ed", "content": "This is a reply to the comment.", "parent": "c84ac8ba-31b2-4595-8c73-eb0e4426f92a" }
+
+Response:
+{
+    "id": "4bb209f7-628a-447c-a2da-8fa215732d18",
+    "author_username": "raj",
+    "content": "This is a reply to the comment."
+}
+
+GET /api/comments/?document=cc96c94a-6ea0-4e20-b225-df0932b9ac92
+{
+  "count": 2,
+  "results": [
+    {
+      "content": "This is a top-level comment.",
+      "replies": [
+        { "content": "This is a reply to the comment." }
+      ]
+    }
+  ]
+}
+
+Audit Logs
+----------
+GET /api/audit-logs/
+{
+    "results": [
+        {
+            "actor_username": "kumar",
+            "action": "added_member",
+            "model_name": "WorkspaceMember"
+        },
+        {
+            "actor_username": "raj",
+            "action": "created",
+            "model_name": "Document"
+        }
+    ]
+}
+
+GET /api/audit-logs/?start_date=2026-05-10&end_date=2026-05-11
+{
+    "results": [
+        {
+            "actor_username": "kumar",
+            "action": "added_member",
+            "model_name":"workspaceMember",
+	    "object_id":"22b39b6c-c855-4ba4-ae01-98ec06e82070
+	    "timestamp": "2026-05-10T17:49:16.539117+05:30"
+	},
+	{
+    "id": "ab9f83fa-b45e-4c60-95d7-62cf26b5bdf2",
+    "actor": "72eb7b26-235c-4ecd-bd7f-787a436ba8ed",
+    "actor_username": "raj",
+    "action": "created",
+    "model_name": "Workspace",
+    "object_id": "2b70f707-5255-48f4-9b01-c697b67e8104",
+    "timestamp": "2026-05-10T17:39:44.753504+05:30"
+}
